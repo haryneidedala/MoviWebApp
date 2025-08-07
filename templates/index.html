@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="hero">
+        <h2>Your Personal Movie Collection</h2>
+        <p>Track your favorite movies and discover new ones</p>
+    </section>
+
+    <section class="user-section">
+        <div class="card">
+            <h2>Existing Users</h2>
+            {% if users %}
+                <ul class="user-list">
+                    {% for user in users %}
+                    <li>
+                        <a href="{{ url_for('user_movies', user_id=user.id) }}">
+                            <i class="fas fa-user"></i> {{ user.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No users yet. Create the first one!</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2>Create New User</h2>
+            <form action="{{ url_for('create_user') }}" method="POST">
+                <div class="form-group">
+                    <label for="name">Username:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-user-plus"></i> Create User
+                </button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

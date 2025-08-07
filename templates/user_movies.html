@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="user-header">
+        <h2>{{ user.name }}'s Movie Collection</h2>
+        <a href="{{ url_for('home') }}" class="btn back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Users
+        </a>
+    </div>
+
+    <section class="add-movie card">
+        <h3>Add New Movie</h3>
+        <form action="{{ url_for('add_movie', user_id=user.id) }}" method="POST">
+            <div class="form-group">
+                <label for="title">Movie Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <button type="submit" class="btn">
+                <i class="fas fa-plus"></i> Add Movie
+            </button>
+        </form>
+    </section>
+
+    {% if movies %}
+        <section class="movie-grid">
+            {% for movie in movies %}
+            <div class="movie-card">
+                <div class="movie-poster">
+                    {% if movie.poster_url and movie.poster_url != 'N/A' %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.name }} poster">
+                    {% else %}
+                    <div class="poster-placeholder">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="movie-info">
+                    <h3>{{ movie.name }}</h3>
+                    <p><i class="fas fa-user"></i> {{ movie.director }}</p>
+                    <p><i class="fas fa-calendar"></i> {{ movie.year }}</p>
+
+                    <div class="movie-actions">
+                        <form action="{{ url_for('update_movie', movie_id=movie.id) }}" method="POST" class="update-form">
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <input type="text" name="new_title" placeholder="New title" required>
+                            <button type="submit" class="btn-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </form>
+
+                        <form action="{{ url_for('delete_movie', movie_id=movie.id) }}" method="POST" class="delete-form">
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn-icon danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    {% else %}
+        <div class="card">
+            <p>No movies in your collection yet. Add some!</p>
+        </div>
+    {% endif %}
+{% endblock %}
